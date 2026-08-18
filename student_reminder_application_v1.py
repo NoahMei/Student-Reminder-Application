@@ -20,12 +20,16 @@ def add_reminder():
     date = date_entry.get()
     time = time_entry.get()
 
-    reminder = 'Subject: ' + subject + '\n' + 'Equipment: ' + equipment + '\n' + 'Date: ' + date + '\n' + 'Time: ' + time
+   if subject == '' or equipment == '' or date == '' or tiem == '': # use if statement to check if the user has leave the input empty
+        messagebox.showerror('Error!', 'Please fill in all the information!') # shows error message if the user entered nothing
 
-    reminders.append(reminder) # add the reminder into the remidners list
+    else:
+        reminder = 'Subject: ' + subject + '\n' + 'Equipment: ' + equipment + '\n' + 'Date: ' + date + '\n' + 'Time: ' + time
 
-    reminder_list.insert(tk.END,reminder + '\n\n')
-    messagebox.showinfo('Success','Reminder added successfully!')
+        reminders.append(reminder) # add the reminder into the remidners list
+
+        reminder_list.insert(tk.END,reminder + '\n\n')
+        messagebox.showinfo('Success','Reminder added successfully!')
 
 # Home page
 home_frame = tk.Frame(root)
