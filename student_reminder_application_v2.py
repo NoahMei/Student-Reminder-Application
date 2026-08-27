@@ -79,7 +79,11 @@ def edit_reminder():
     if number == '':
         messagebox.showerror('Error!','Please enter a reminder number!')
     else:
-        number = int(number) # changes the number from text into an integer
+        try:
+            number = int(number) # changes the number from text into an integer
+        except ValueError:
+            messagebox.showerror('Error!','Please enter a number') # tell theuser this input can only be an integer
+            return
         if number < 1 or number > len(reminders): # check if the number is less than 1 or larger than the length of reminders
             messagebox.showerror('Error!','That reminder does not exist!')
         else:
@@ -132,7 +136,11 @@ def delete_reminder():
     if number == '':
         messagebox.showerror('Error!','Please enter a reminder number!')
     else:
-        number = int(number)
+        try:
+            number = int(number)
+        except ValueError:
+            messagebox.showerror('Error!','Please enter a number')
+            return
         if number < 1 or number > len(reminders):
             messagebox.showerror('Error!','That reminder does not exist!')
         else:
@@ -222,7 +230,11 @@ def edit_study_plan():
     if number == '':
         messagebox.showerror('Error!','Please enter a study plan number!')
     else:
-        number = int(number)
+        try:
+            number = int(number)
+        except ValueError:
+            messagebox.showerror('Error!','Please enter a number')
+            return
         if number < 1 or number > len(study_plan):
             messagebox.showerror('Error!','That study plan does not exist!')
         else:
@@ -276,7 +288,11 @@ def delete_study_plan():
     if number == '':
         messagebox.showerror('Error!','Please enter a study plan number!')
     else:
-        number = int(number)
+        try:
+            number = int(number)
+        except ValueError:
+            messagebox.showerror('Error!','Please enter a number')
+            return
         if number < 1 or number > len(study_plan):
             messagebox.showerror('Error!','That study plan does not exist!')
         else:
