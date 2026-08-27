@@ -10,8 +10,9 @@ root.geometry("500x650")
 reminders = []
 study_plan = []
 
-# Stores the reminder currently being edited
+# Stores the reminder and study plan currently being edited
 editing_reminder = -1
+editing_study_plan = -1
 
 # Home page functions
 def open_notification():
@@ -133,9 +134,8 @@ def delete_reminder():
 # Study Period Planner functions
 def show_study_plan():
     study_list.delete("1.0", tk.END)
-
-    for i in range(len(study_plan)): # counts the study plans in the list
-        study_list.insert(tk.END,str(i + 1) + ". " + study_plan[i] + "\n\n") # displays each study plan in the text box
+    for i in range(len(study_plan)):
+        study_list.insert(tk.END,str(i + 1) + ". " + study_plan[i] + "\n\n")
 
 def add_study_plan():
     subject = study_subject_entry.get()
@@ -146,17 +146,139 @@ def add_study_plan():
     if subject == '' or task == '' or date == '' or time == '':
         messagebox.showerror('Error!','Please fill in all the information!')
     else:
-        plan = ('Subject: ' + subject +'\nTask: ' + task +'\nDate: ' + date +'\nTime: ' + time)
-        study_plan.append(plan)
-        show_study_plan()
+        plan = ('Subject: ' + subject +'\nTask: ' + task + '\nDate: ' + date + '\nTime: ' + time)
+        study_plan.append(plan) # adds the study plan into the list
+        show_study_plan() # refreshes the study plan list
 
-        # clears the Entry boxes
+        # clears the Entry boxes after adding
         study_subject_entry.delete(0, tk.END)
         study_task_entry.delete(0, tk.END)
         study_date_entry.delete(0, tk.END)
         study_time_entry.delete(0, tk.END)
 
         messagebox.showinfo('Success','Study plan added successfully!')
+
+
+def edit_study_plan():
+    global editing_study_plan
+    number = study_number_entry.get() # gets the study plan number entered by the user
+    if number == '':
+        messagebox.showerror('Error!','Please enter a study plan number!')
+    else:
+        number = int(number)
+        if number < 1 or number > len(study_plan):
+            messagebox.showerror('Error!','That study plan does not exist!')
+        else:
+            editing_study_plan = number - 1
+            plan = study_plan[editing_study_plan]
+            information = plan.split('\n')
+
+            study_subject_entry.delete(0, tk.END)
+            study_subject_entry.insert(0,information[0].replace('Subject: ', ''))
+
+            study_task_entry.delete(0, tk.END)
+            study_task_entry.insert(0,information[1].replace('Task: ', ''))
+
+            study_date_entry.delete(0, tk.END)
+            study_date_entry.insert(0,information[2].replace('Date: ', ''))
+
+            study_time_entry.delete(0, tk.END)
+            study_time_entry.insert(0,information[3].replace('Time: ', ''))
+
+            messagebox.showinfo('Edit Study Plan','Change the information and click Save Changes.')
+
+def save_study_plan_changes():
+    global editing_study_plan
+    if editing_study_plan == -1:
+        messagebox.showerror('Error!','Please click Edit Study Plan first!')
+    else:
+        subject = study_subject_entry.get()
+        task = study_task_entry.get()
+        date = study_date_entry.get()
+        time = study_time_entry.get()
+
+        if subject == '' or task == '' or date == '' or time == '':
+            messagebox.showerror('Error!','Please fill in all the information!')
+        else:
+            plan = ('Subject: ' + subject +'\nTask: ' + task +'\nDate: ' + date +'\nTime: ' + time)
+            study_plan[editing_study_plan] = plan
+            show_study_plan()
+            editing_study_plan = -1
+
+            # clears the Entry boxes
+            study_subject_entry.delete(0, tk.END)
+            study_task_entry.delete(0, tk.END)
+            study_date_entry.delete(0, tk.END)
+            study_time_entry.delete(0, tk.END)
+            study_number_entry.delete(0, tk.END)
+
+            messagebox.showinfo('Success','Study plan updated successfully!')
+
+def delete_study_plan():
+    number = study_number_entry.get() # gets the study plan number
+    if number == '':
+        messagebox.showerror('Error!','Please enter a study plan number!')
+    else:
+        number = int(number)
+        if number < 1 or number > len(study_plan):
+            messagebox.showerror('Error!','That study plan does not exist!')
+        else:
+            study_plan.pop(number - 1)
+            show_study_plan()
+            study_number_entry.delete(0, tk.END)
+            messagebox.showinfo('Success','Study plan deleted successfully!')
+
+# Study Period Planner page
+study_frame = tk.Frame(root)
+study_title = tk.Label(study_frame,text='Study Period Planner',font=('Arial', 18))
+study_title.pack(pady=15)
+
+tk.Label(study_frame,text='Subject').pack()
+study_subject_entry = tk.Entry(study_frame)
+study_subject_entry.pack()
+
+tk.Label(study_frame,text='Task').pack()
+study_task_entry = tk.Entry(study_frame)
+study_task_entry.pack()
+
+tk.Label(study_frame,text='Date').pack()
+study_date_entry = tk.Entry(study_frame)
+study_date_entry.pack()
+
+tk.Label(study_frame,text='Time').pack()
+study_time_entry = tk.Entry(study_frame)
+study_time_entry.pack()
+
+study_add_button = tk.Button(
+    study_frame,
+    text='Add Study Plan',
+    command=add_study_plan
+)
+study_add_button.pack(pady=5)
+
+# Study plan list
+study_label = tk.Label(study_frame,text='Study Plan List')
+study_label.pack()
+study_list = tk.Text(study_frame,height=8,width=60)
+study_list.pack()
+
+# Edit and delete study plan
+tk.Label(study_frame,text='Enter study plan number:').pack()
+study_number_entry = tk.Entry(study_frame)
+study_number_entry.pack()
+
+study_edit_button = tk.Button(study_frame,text='Edit Study Plan',command=edit_study_plan)
+study_edit_button.pack(pady=2)
+
+study_save_button = tk.Button(study_frame,text='Save Changes',command=save_study_plan_changes)
+study_save_button.pack(pady=2)
+
+study_delete_button = tk.Button(study_frame,text='Delete Study Plan',command=delete_study_plan)
+study_delete_button.pack(pady=2)
+
+# Back to home button
+study_home_button = tk.Button(study_frame,text='Back to Home',command=back_home_study)
+study_home_button.pack(pady=5)
 
 # Home page
 home_frame = tk.Frame(root)
