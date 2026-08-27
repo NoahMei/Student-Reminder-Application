@@ -31,6 +31,19 @@ def back_home_study():
     study_frame.pack_forget()
     home_frame.pack()
 
+# Home page
+home_frame = tk.Frame(root)
+title = tk.Label(home_frame,text='Student Reminder App',font=('Arial', 20))
+title.pack(pady=30)
+
+open_button = tk.Button(home_frame,text='Daily Notification',command=open_notification)
+open_button.pack(pady=5)
+
+study_button = tk.Button(home_frame,text='Study Period Planner',command=open_study_planner)
+study_button.pack(pady=5)
+
+home_frame.pack()
+
 # Reminder functions
 def show_reminders(): # this function refreshes the reminder list after adding, deleting or editing
     reminder_list.delete("1.0", tk.END) # removes everything currently in the text box
@@ -70,11 +83,10 @@ def edit_reminder():
         if number < 1 or number > len(reminders): # check if the number is less than 1 or larger than the length of reminders
             messagebox.showerror('Error!','That reminder does not exist!')
         else:
-            editing_reminder = number - 1 # stores which reminder the user wants to edit
-            reminder = reminders[editing_reminder] # gets the selected reminder
-            information = reminder.split('\n') # separates the reminder information
+            editing_reminder = number - 1
+            reminder = reminders[editing_reminder]
+            information = reminder.split('\n')
 
-            # puts the old information back into the Entry boxes
             subject_entry.delete(0, tk.END)
             subject_entry.insert(0,information[0].replace('Subject: ', ''))
 
@@ -94,7 +106,6 @@ def save_changes():
     if editing_reminder == -1:
         messagebox.showerror('Error!','Please click Edit Reminder first!')
     else:
-        # gets the new information from the Entry boxes
         subject = subject_entry.get()
         equipment = equipment_entry.get()
         date = date_entry.get()
@@ -104,11 +115,10 @@ def save_changes():
             messagebox.showerror('Error!','Please fill in all the information!')
         else:
             reminder = ('Subject: ' + subject +'\nEquipment: ' + equipment +'\nDate: ' + date +'\nTime: ' + time)
-            reminders[editing_reminder] = reminder # replaces the old reminder with the new one
+            reminders[editing_reminder] = reminder
             show_reminders()
-            editing_reminder = -1 # shows that editing has finished
+            editing_reminder = -1
 
-            # clears the Entry boxes
             subject_entry.delete(0, tk.END)
             equipment_entry.delete(0, tk.END)
             date_entry.delete(0, tk.END)
@@ -131,6 +141,55 @@ def delete_reminder():
             number_entry.delete(0, tk.END) # clears the number Entry box
             messagebox.showinfo('Success','Reminder deleted successfully!')
 
+# Daily Notification page
+notification_frame = tk.Frame(root)
+title2 = tk.Label(notification_frame,text='Daily Notification',font=('Arial', 18))
+title2.pack(pady=15)
+
+tk.Label(notification_frame,text='Subject').pack()
+subject_entry = tk.Entry(notification_frame)
+subject_entry.pack()
+
+tk.Label(notification_frame,text='Equipment').pack()
+equipment_entry = tk.Entry(notification_frame)
+equipment_entry.pack()
+
+tk.Label(notification_frame,text='Date').pack()
+date_entry = tk.Entry(notification_frame)
+date_entry.pack()
+
+tk.Label(notification_frame,text='Time').pack()
+time_entry = tk.Entry(notification_frame)
+time_entry.pack()
+
+add_button = tk.Button(notification_frame,text='Add Reminder',command=add_reminder)
+add_button.pack(pady=5)
+
+# Reminder list
+reminder_label = tk.Label(notification_frame,text='Reminder List')
+reminder_label.pack()
+reminder_list = tk.Text(notification_frame,height=8,width=60)
+reminder_list.pack()
+
+# Edit and delete reminder
+tk.Label(notification_frame,text='Enter reminder number:').pack()
+
+number_entry = tk.Entry(notification_frame)
+number_entry.pack()
+
+edit_button = tk.Button(notification_frame,text='Edit Reminder',command=edit_reminder)
+edit_button.pack(pady=2)
+
+save_button = tk.Button(notification_frame,text='Save Changes',command=save_changes)
+save_button.pack(pady=2)
+
+delete_button = tk.Button(notification_frame,text='Delete Reminder',command=delete_reminder)
+delete_button.pack(pady=2)
+
+# Back to home button
+home_notification_button = tk.Button(notification_frame,text='Back to Home',command=back_home_notification)
+home_notification_button.pack(pady=5)
+
 # Study Period Planner functions
 def show_study_plan():
     study_list.delete("1.0", tk.END)
@@ -147,17 +206,15 @@ def add_study_plan():
         messagebox.showerror('Error!','Please fill in all the information!')
     else:
         plan = ('Subject: ' + subject +'\nTask: ' + task + '\nDate: ' + date + '\nTime: ' + time)
-        study_plan.append(plan) # adds the study plan into the list
-        show_study_plan() # refreshes the study plan list
+        study_plan.append(plan)
+        show_study_plan()
 
-        # clears the Entry boxes after adding
         study_subject_entry.delete(0, tk.END)
         study_task_entry.delete(0, tk.END)
         study_date_entry.delete(0, tk.END)
         study_time_entry.delete(0, tk.END)
 
         messagebox.showinfo('Success','Study plan added successfully!')
-
 
 def edit_study_plan():
     global editing_study_plan
@@ -249,11 +306,7 @@ tk.Label(study_frame,text='Time').pack()
 study_time_entry = tk.Entry(study_frame)
 study_time_entry.pack()
 
-study_add_button = tk.Button(
-    study_frame,
-    text='Add Study Plan',
-    command=add_study_plan
-)
+study_add_button = tk.Button(study_frame,text='Add Study Plan',command=add_study_plan)
 study_add_button.pack(pady=5)
 
 # Study plan list
@@ -279,105 +332,6 @@ study_delete_button.pack(pady=2)
 # Back to home button
 study_home_button = tk.Button(study_frame,text='Back to Home',command=back_home_study)
 study_home_button.pack(pady=5)
-
-# Home page
-home_frame = tk.Frame(root)
-title = tk.Label(home_frame,text='Student Reminder App',font=('Arial', 20))
-title.pack(pady=30)
-
-open_button = tk.Button(home_frame,text='Daily Notification',command=open_notification)
-open_button.pack(pady=5)
-
-study_button = tk.Button(home_frame,text='Study Period Planner',command=open_study_planner)
-study_button.pack(pady=5)
-
-home_frame.pack()
-
-# Daily Notification page
-notification_frame = tk.Frame(root)
-
-title2 = tk.Label(notification_frame,text='Daily Notification',font=('Arial', 18))
-title2.pack(pady=15)
-
-tk.Label(notification_frame,text='Subject').pack()
-subject_entry = tk.Entry(notification_frame)
-subject_entry.pack()
-
-tk.Label(notification_frame,text='Equipment').pack()
-equipment_entry = tk.Entry(notification_frame)
-equipment_entry.pack()
-
-tk.Label(notification_frame,text='Date').pack()
-date_entry = tk.Entry(notification_frame)
-date_entry.pack()
-
-tk.Label(notification_frame,text='Time').pack()
-time_entry = tk.Entry(notification_frame)
-time_entry.pack()
-
-add_button = tk.Button(notification_frame,text='Add Reminder',command=add_reminder)
-add_button.pack(pady=5)
-
-
-# Reminder list
-reminder_label = tk.Label(notification_frame,text='Reminder List')
-reminder_label.pack()
-reminder_list = tk.Text(notification_frame,height=8,width=60)
-reminder_list.pack()
-
-# Edit and delete reminder
-tk.Label(notification_frame,text='Enter reminder number:').pack()
-
-number_entry = tk.Entry(notification_frame)
-number_entry.pack()
-
-edit_button = tk.Button(notification_frame,text='Edit Reminder',command=edit_reminder)
-edit_button.pack(pady=2)
-
-save_button = tk.Button(notification_frame,text='Save Changes',command=save_changes)
-save_button.pack(pady=2)
-
-delete_button = tk.Button(notification_frame,text='Delete Reminder',command=delete_reminder)
-delete_button.pack(pady=2)
-
-# Back to home button
-home_notification_button = tk.Button(notification_frame,text='Back to Home',command=back_home_notification)
-home_notification_button.pack(pady=5)
-
-
-# Study Period Planner page
-study_frame = tk.Frame(root)
-study_title = tk.Label(study_frame,text='Study Period Planner',font=('Arial', 18))
-study_title.pack(pady=15)
-
-tk.Label(study_frame,text='Subject').pack()
-study_subject_entry = tk.Entry(study_frame)
-study_subject_entry.pack()
-
-tk.Label(study_frame,text='Task').pack()
-study_task_entry = tk.Entry(study_frame)
-study_task_entry.pack()
-
-tk.Label(study_frame,text='Date').pack()
-study_date_entry = tk.Entry(study_frame)
-study_date_entry.pack()
-
-tk.Label(study_frame, text='Time').pack()
-study_time_entry = tk.Entry(study_frame)
-study_time_entry.pack()
-
-study_add_button = tk.Button(study_frame,text='Add Study Plan',command=add_study_plan)
-study_add_button.pack(pady=5)
-
-# Study plan list
-study_label = tk.Label(study_frame,text='Study Plan List')
-study_label.pack()
-study_list = tk.Text(study_frame,height=8,width=60)
-study_list.pack()
-
-# Back to home button
-home_study_button = tk.Button(study_frame,text='Back to Home',command=back_home_study)
-home_study_button.pack(pady=5)
 
 # Function that closes the program
 def finish():
