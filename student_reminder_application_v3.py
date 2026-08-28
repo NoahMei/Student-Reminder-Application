@@ -384,10 +384,6 @@ study_delete_button.pack(pady=2)
 study_home_button = tk.Button(study_frame,text='Back to Home',command=back_home_study,width=20,height=2)
 study_home_button.pack(pady=5)
 
-# Finish button
-finish_button = tk.Button(notification_frame,text='Finish',command=finish,width=20,height=2)
-finish_button.pack()
-
 # Load saved information when the program starts
 load_data()
 show_reminders()
